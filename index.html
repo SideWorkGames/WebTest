@@ -8,7 +8,8 @@
   </head>
   <body style="text-align: center; padding: 0; border: 0; margin: 0;">
     <canvas id="unity-canvas" width=1920 height=1400 tabindex="-1" style="width: 1200px; height: 1400px; background: #ffffff"></canvas>
-    <script src="Build/Admin.loader.js"></script>
+    <script src="Build/Admin.loader.js"></script>    
+    <script src="StreamingAssets/FileLoader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
     <script>
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
@@ -26,6 +27,8 @@
         document.body.style.textAlign = "left";
       }
 
+      var gameInstance = null;
+
       createUnityInstance(document.querySelector("#unity-canvas"), {
         arguments: [],
         dataUrl: "Build/Admin.data.br",
@@ -37,6 +40,11 @@
         productVersion: "1.0",
         // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
         // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+      }).then((instance) => {
+        gameInstance = instance; // Unity WebGL이 실행된 후 gameInstance 설정
+        console.log("Unity WebGL 로드 완료");
+      }).catch((message) => {
+        console.error("Unity WebGL 로드 실패: " + message);
       });
 
       document.addEventListener("wheel", (event) => {
@@ -49,32 +57,6 @@
             canvas.style.pointerEvents = "auto"; // Re-enable canvas interactions
         }
       });
-
-      function OpenFileDialog() {
-        document.getElementById('fileInput').click();
-      }
-
-      // 파일 선택 후 실행되는 함수
-      function ReadExcelFile(event) {
-        let file = event.target.files[0]; // 사용자가 선택한 파일
-        let reader = new FileReader();
-
-        reader.onload = function(e) {
-          let data = new Uint8Array(e.target.result); 
-          let workbook = XLSX.read(data, { type: 'array' }); 
-
-          let firstSheet = workbook.SheetNames[0]; // 첫 번째 시트 가져오기
-          let sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet]); // 시트를 JSON으로 변환
-
-          SendDataToUnity(JSON.stringify(sheetData)); // JSON 데이터를 Unity로 전달
-        };
-
-        reader.readAsArrayBuffer(file); // 파일을 바이너리 배열로 읽기
-      }
-      // Unity로 JSON 데이터 전달
-      function SendDataToUnity(data) {
-        gameInstance.SendMessage('XLS_Loader', 'ReceiveExcelData', data);
-      }
-    </script>
+    </script>    
   </body>
 </html>
