@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>환경교통어드민</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+  </head>
+  <body style="text-align: center; padding: 0; border: 0; margin: 0;">
+    <canvas id="unity-canvas" width=1920 height=1400 tabindex="-1" style="width: 1200px; height: 1400px; background: #ffffff"></canvas>
+    <script src="Build/Admin.loader.js"></script>    
+    <script src="StreamingAssets/FileLoader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+    <script>
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Mobile device style: fill the whole browser client area with the game canvas:
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+
+        var canvas = document.querySelector("#unity-canvas");
+        canvas.style.width = "100%";
+        canvas.style.height = "100%";
+        canvas.style.position = "fixed";
+
+        document.body.style.textAlign = "left";
+      }
+
+      var gameInstance = null;
+
+      createUnityInstance(document.querySelector("#unity-canvas"), {
+        arguments: [],
+        dataUrl: "Build/Admin.data.br",
+        frameworkUrl: "Build/Admin.framework.js.br",
+        codeUrl: "Build/Admin.wasm.br",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "ETDA",
+        productName: "Project_SM",
+        productVersion: "1.0",
+        // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+        // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+      }).then((instance) => {
+        gameInstance = instance; // Unity WebGL이 실행된 후 gameInstance 설정
+        console.log("Unity WebGL 로드 완료");
+      }).catch((message) => {
+        console.error("Unity WebGL 로드 실패: " + message);
+      });
+
+      document.addEventListener("wheel", (event) => {
+        const canvas = document.getElementById("unity-canvas");
+        if (canvas) {
+            canvas.style.pointerEvents = "none"; // Allow scroll to pass through canvas
+        }
+        window.scrollBy(0, event.deltaY); // Scroll the browser window
+        if (canvas) {
+            canvas.style.pointerEvents = "auto"; // Re-enable canvas interactions
+        }
+      });
+    </script>    
+  </body>
+</html>
