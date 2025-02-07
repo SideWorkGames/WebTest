@@ -26,14 +26,13 @@
 
         document.body.style.textAlign = "left";
       }
-
       var gameInstance = null;
 
       createUnityInstance(document.querySelector("#unity-canvas"), {
         arguments: [],
-        dataUrl: "Build/Admin.data.br",
-        frameworkUrl: "Build/Admin.framework.js.br",
-        codeUrl: "Build/Admin.wasm.br",
+        dataUrl: "Build/Admin.data.unityweb",
+        frameworkUrl: "Build/Admin.framework.js.unityweb",
+        codeUrl: "Build/Admin.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "ETDA",
         productName: "Project_SM",
