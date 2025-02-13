@@ -20,9 +20,13 @@ window.ReadExcelFile = function () {
 
 // Unity로 JSON 데이터 전달
 window.SendDataToUnity = function (data) {
-    if (typeof gameInstance !== "undefined") {
-        gameInstance.SendMessage('XLS_Loader', 'ReceiveExcelData', data);
-    } else {
+    if (typeof gameInstance !== "undefined")
+    {
+        console.log("호출 완료");
+        gameInstance.SendMessage('DB_Manager', 'ReceiveExcelData', data);
+    } 
+    else 
+    {
         console.log("gameInstance가 정의되지 않음");
     }
 };

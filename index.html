@@ -6,8 +6,33 @@
     <title>환경교통어드민</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
   </head>
-  <body style="text-align: center; padding: 0; border: 0; margin: 0;">
-    <canvas id="unity-canvas" width=1920 height=1400 tabindex="-1" style="width: 1200px; height: 1400px; background: #ffffff"></canvas>
+  <body>
+    <style>
+      html, body {
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+          height: 100%;
+          display: flex;
+          justify-content: center; /* 가로 중앙 정렬 */
+          align-items: center; /* 세로 중앙 정렬 */
+      }
+  
+      #unity-container {
+          height: 100vh; /* 브라우저 높이에 맞춤 */
+          width: auto; /* 가로 크기는 자동 설정 */
+          display: flex;
+          justify-content: center; /* 가로 중앙 정렬 */
+          align-items: center;
+      }
+  
+      #unity-canvas {
+          height: 100vh; /* 높이만 브라우저에 맞춤 */
+          width: auto; /* 가로 비율 유지 */
+          display: block;
+      }
+  </style>
+    <canvas id="unity-canvas" width=1920 height=1920 tabindex="-1" style="width: 1920px; height: 1920px; background: #ffffff"></canvas>
     <script src="Build/Admin.loader.js"></script>    
     <script src="StreamingAssets/FileLoader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
@@ -26,6 +51,16 @@
 
         document.body.style.textAlign = "left";
       }
+
+      function resizeUnityCanvas() {
+        var canvas = document.getElementById("unity-canvas");
+        canvas.style.height = window.innerHeight + "px";
+        canvas.style.width = "auto";
+      }
+
+      window.addEventListener("resize", resizeUnityCanvas);
+      window.addEventListener("load", resizeUnityCanvas)
+
       var gameInstance = null;
 
       createUnityInstance(document.querySelector("#unity-canvas"), {
