@@ -1,4 +1,5 @@
-window.ReadExcelFile = function () {
+window.ReadExcelFile = function ()
+{
     var fileInput = document.getElementById('fileInput');
     if (!fileInput || fileInput.files.length === 0) return;
 
@@ -19,7 +20,8 @@ window.ReadExcelFile = function () {
 };
 
 // Unity로 JSON 데이터 전달
-window.SendDataToUnity = function (data) {
+window.SendDataToUnity = function (data)
+{
     if (typeof gameInstance !== "undefined")
     {
         console.log("호출 완료");
@@ -29,4 +31,10 @@ window.SendDataToUnity = function (data) {
     {
         console.log("gameInstance가 정의되지 않음");
     }
+};
+
+//Unity 내 해상도 조절
+window.SendResize = function (size)
+{
+    gameInstance.SendMessage('UI', 'SetResolution', size);
 };

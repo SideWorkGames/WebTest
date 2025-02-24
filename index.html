@@ -6,33 +6,34 @@
     <title>환경교통어드민</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
   </head>
-  <body>
+  <body>    
+    <div id="unity-container"></div>
+      <canvas id="unity-canvas"></canvas>
+    </div>
     <style>
-      html, body {
-          margin: 0;
-          padding: 0;
-          overflow: hidden;
-          height: 100%;
-          display: flex;
-          justify-content: center; /* 가로 중앙 정렬 */
-          align-items: center; /* 세로 중앙 정렬 */
+      html, body 
+      {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow-x: auto; /* 가로 스크롤 활성화 */
+        overflow-y: hidden; /* 세로 스크롤은 비활성화 */
+        display: flex;
+        justify-content: flex-start; /* 좌측 정렬 */
+        align-items: flex-start;
       }
-  
+
       #unity-container {
-          height: 100vh; /* 브라우저 높이에 맞춤 */
-          width: auto; /* 가로 크기는 자동 설정 */
-          display: flex;
-          justify-content: center; /* 가로 중앙 정렬 */
-          align-items: center;
+        width: 1920px;  /* 초기 해상도 */
+        height: 1080px;
       }
-  
+
       #unity-canvas {
-          height: 100vh; /* 높이만 브라우저에 맞춤 */
-          width: auto; /* 가로 비율 유지 */
-          display: block;
+        width: 1920px; /* Unity에서 설정한 해상도로 변경됨 */
+        height: 1080px;
       }
-  </style>
-    <canvas id="unity-canvas" style="width: 100vw; height: 100vh;"></canvas>
+    </style>    
     <script src="Build/Admin.loader.js"></script>    
     <script src="StreamingAssets/FileLoader.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
@@ -52,14 +53,46 @@
         document.body.style.textAlign = "left";
       }
 
-      function resizeUnityCanvas() {
-        var canvas = document.getElementById("unity-canvas");
-        canvas.style.height = window.innerHeight + "px";
-        canvas.style.width = "auto";
+      //해상도 관련
+      // 기본 해상도 (1920x1080)
+      var baseWidth = 1920;
+      var baseHeight = 1080;
+
+      function AdjustCanvasSize() {
+        var container = document.getElementById('unity-container');
+        var canvas = document.getElementById('unity-canvas');
+
+        if (!container || !canvas) {
+          console.error("[Error] unity-container or unity-canvas not found!");
+          return;
+        }
+
+        // 브라우저 크기
+        var browserWidth = window.innerWidth;
+        var browserHeight = window.innerHeight;
+
+        // Unity에서 설정한 해상도 반영 (최소 1920x1080)
+        var newWidth = Math.max(baseWidth, browserWidth);
+        var newHeight = Math.max(baseHeight, browserHeight);
+
+        var browserSize = newWidth + "," + browserHeight;
+        window.SendResize(browserSize);
+        
+        // 캔버스 크기 조정
+        container.style.width = newWidth + "px";
+        container.style.height = browserHeight + "px";
+        canvas.style.width = newWidth + "px";
+        canvas.style.height = browserHeight + "px";
+
+        // 브라우저가 게임 해상도보다 작으면 스크롤 활성화
+        document.body.style.overflowX = newWidth > browserWidth ? "auto" : "hidden";
+        document.body.style.overflowY = "hidden";
+
+        //window.SendResize(browserHeight);
       }
 
-      window.addEventListener("resize", resizeUnityCanvas);
-      window.addEventListener("load", resizeUnityCanvas)
+      window.addEventListener('resize', AdjustCanvasSize);
+      window.addEventListener('load', AdjustCanvasSize);
 
       var gameInstance = null;
 
